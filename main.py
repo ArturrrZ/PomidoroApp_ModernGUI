@@ -48,14 +48,14 @@ def start_timer():
     global reps, remaining_time
     if timer is not None:
         window.after_cancel(timer)
-    reps += 1
+
     if remaining_time > 0:
         # print(remaining_time)
         # print(type(remaining_time))
         count_down(remaining_time)
         remaining_time = 0  # Reset remaining time
         return
-
+    reps += 1
 
 
 

@@ -6,8 +6,8 @@ RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
-WORK_MIN = 0.1
-SHORT_BREAK_MIN = 0.1
+WORK_MIN = 25
+SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 reps = 0
 timer = None
@@ -27,9 +27,10 @@ def stop():
     window.after_cancel(timer)
     global remaining_time
     remaining_time=get_remaining_time()
+    print(remaining_time)
     title_label.config(text="Timer")
 def get_remaining_time():
-    timer_text2=canvas.cget(timer_text,'text')
+    timer_text2=canvas.itemcget(timer_text,'text')
     minutes, seconds = map(int, timer_text2.split(':'))
     # print(minutes,seconds)
     return minutes * 60 + seconds
@@ -37,12 +38,18 @@ def get_remaining_time():
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
 def start_timer():
-    global reps,remaining_time
-    reps += 1
+    global reps, remaining_time
+    if timer is not None:
+        window.after_cancel(timer)
+
+
     if remaining_time > 0:
         count_down(remaining_time)
-        remaining_time = 0  # Reset remaining time
+        remaining_time = 0
+
+        # Reset remaining time
         return
+    reps += 1
     work_sec = WORK_MIN * 60
     short_break_sec = SHORT_BREAK_MIN * 60
     long_break_sec = LONG_BREAK_MIN * 60
