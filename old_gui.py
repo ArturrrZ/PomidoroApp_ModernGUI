@@ -11,6 +11,7 @@ SHORT_BREAK_MIN = 0.1
 LONG_BREAK_MIN = 20
 reps = 0
 timer = None
+remaining_time=0
 
 # ---------------------------- TIMER RESET ------------------------------- # 
 
@@ -19,16 +20,29 @@ def reset_timer():
     canvas.itemconfig(timer_text, text="00:00")
     title_label.config(text="Timer")
     check_marks.config(text="")
-    global reps
+    global reps,remaining_time
     reps = 0
-
+    remaining_time=0
+def stop():
+    window.after_cancel(timer)
+    global remaining_time
+    remaining_time=get_remaining_time()
+    title_label.config(text="Timer")
+def get_remaining_time():
+    timer_text2=canvas.cget(timer_text,'text')
+    minutes, seconds = map(int, timer_text2.split(':'))
+    # print(minutes,seconds)
+    return minutes * 60 + seconds
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
 def start_timer():
-    global reps
+    global reps,remaining_time
     reps += 1
-
+    if remaining_time > 0:
+        count_down(remaining_time)
+        remaining_time = 0  # Reset remaining time
+        return
     work_sec = WORK_MIN * 60
     short_break_sec = SHORT_BREAK_MIN * 60
     long_break_sec = LONG_BREAK_MIN * 60
@@ -89,6 +103,9 @@ reset_button.grid(column=2, row=2)
 check_marks = Label(fg=GREEN, bg=YELLOW)
 check_marks.grid(column=1, row=3)
 
+
+stop_button=Button(text="Stop",command=stop)
+stop_button.grid(row=2,column=1)
 
 
 

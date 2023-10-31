@@ -24,7 +24,8 @@ def reset_timer():
     canvas.itemconfig(timer_text, text="00:00")
     title_label.configure(text="Timer")
     check_marks.configure(text="")
-    global reps
+    global reps,remaining_time
+    remaining_time=0
     reps = 0
 
 def stop_timer():
