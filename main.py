@@ -17,7 +17,7 @@ reps = 0
 timer = None
 
 # ---------------------------- TIMER RESET ------------------------------- #
-
+remaining_time=0
 def reset_timer():
     window.after_cancel(timer)
 
@@ -27,14 +27,36 @@ def reset_timer():
     global reps
     reps = 0
 
+def stop_timer():
+    window.after_cancel(timer)
+    global remaining_time
+
+    remaining_time = get_remaining_time()
+    title_label.configure(text="Timer")
+def get_remaining_time():
+
+    timer_text2 = canvas.itemcget(timer_text, 'text')
+    minutes, seconds = map(int, timer_text2.split(':'))
+    # print(minutes,seconds)
+    return minutes * 60 + seconds
+
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 
 def start_timer():
+    global reps, remaining_time
     if timer is not None:
         window.after_cancel(timer)
-    global reps
     reps += 1
+    if remaining_time > 0:
+        # print(remaining_time)
+        # print(type(remaining_time))
+        count_down(remaining_time)
+        remaining_time = 0  # Reset remaining time
+        return
+
+
+
 
     work_sec = WORK_MIN * 60
     short_break_sec = SHORT_BREAK_MIN * 60
@@ -98,7 +120,8 @@ reset_button.grid(column=2, row=2)
 check_marks=customtkinter.CTkLabel(master=window,text="",text_color=GREEN,font=(FONT_NAME, 20, "bold"))
 check_marks.grid(row=4,column=1)
 
-
+stop_button=customtkinter.CTkButton(master=window,text="Stop",width=100,fg_color='black',command=stop_timer)
+stop_button.grid(column=1, row=2)
 
 
 
